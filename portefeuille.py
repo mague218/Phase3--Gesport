@@ -108,6 +108,7 @@ class Portefeuille:
         return {symbole: quantite for symbole, quantite in self.actions.items()}
 
     def valeur_projetee(self, date, rendement):
+        """Définition de la méthode valeur_projetee"""
         if date <= datetime.now().date():
             raise ErreurDate("La date future spécifiée est antérieure ou égale à la date du jour.")
 
