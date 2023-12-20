@@ -14,6 +14,7 @@ class Portefeuille:
         self.charger_portfolio()
 
     def charger_portfolio(self):
+        """Méthode charger_portfolio"""
         try:
             with open(f'{self.nom_portefeuille}.json', 'r') as file:
                 data = json.load(file)
