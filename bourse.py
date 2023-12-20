@@ -1,9 +1,9 @@
 """module bourse"""
 import json
+import requests
 from datetime import datetime
 from collections import defaultdict
 from exceptions import ErreurDate
-import requests
 
 
 class Bourse:
