@@ -4,6 +4,7 @@ from bourse import Bourse
 import json
 
 class Portefeuille:
+    """Création de la classe portefeuille"""
     def _init_(self, bourse, nom_portefeuille=None):
         self.bourse = bourse
         self.nom_portefeuille = nom_portefeuille
