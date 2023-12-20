@@ -4,6 +4,8 @@ from datetime import datetime
 from collections import defaultdict
 from exceptions import ErreurDate
 import requests
+
+
 class Bourse:
     """class bourse"""
     def __init__(self):
