@@ -1,4 +1,4 @@
-"""module bourse"""
+"""Module bourse"""
 import json
 import requests
 from datetime import datetime
@@ -9,11 +9,11 @@ from exceptions import ErreurDate
 class Bourse:
     """class bourse"""
     def __init__(self):
-        """méthode d'initialisation"""
+        """Initialisation"""
         self.prix_actions = defaultdict(dict)
 
     def prix(self, symbole, dates):
-        """méthode permettant le calcul du prix"""
+        """Méthode permettant le calcul du prix"""
         url = f'https://pax.ulaval.ca/action/{symbole}/historique/'
         params = {
             'début': "",
@@ -40,5 +40,5 @@ class Bourse:
         return 0.0
 
     def ajouter_prix(self, symbole, date, prix):
-        """méthode avec attributs symbole, date et prix"""
+        """Méthode avec attributs symbole, date et prix"""
         self.prix_actions[symbole][date] = prix

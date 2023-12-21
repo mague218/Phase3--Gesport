@@ -4,6 +4,7 @@ from bourse import Bourse
 from portefeuille import Portefeuille
 from exceptions import *
 
+
 def analyser_commande():
     parser = argparse.ArgumentParser(description="Système de gestion de portefeuille financier")
     parser.add_argument('action',
@@ -50,7 +51,6 @@ def principal():
         date_obj = datetime.now().date()
     else:
         datetime.strptime(commande.date, '%Y-%m-%d').date()
-    # Exécuter la méthode correspondante en fonction de l'action
     if commande.action == 'deposer':
         portefeuille.charger_portfolio()
         portefeuille.deposer(int(commande.quantite), date_obj)
@@ -68,7 +68,6 @@ def principal():
         valeur_projetee = portefeuille.valeur_projetee(date_obj, commande.rendement)
         print(f"Valeur projetée = {valeur_projetee}")
     
-    # Afficher le solde actuel et sauvegarder le portefeuille
     print(f"Solde = {portefeuille.solde(date_obj)}")
     portefeuille.sauvegarder_portfolio()
 

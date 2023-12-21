@@ -1,11 +1,16 @@
-from datetime import datetime
+"""Module Porte Feuilles"""
+from datetime import datetime, timedelta
 from exceptions import ErreurDate, ErreurQuantité, LiquiditéInsuffisante
 from bourse import Bourse
 import json
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 class Portefeuille:
-    """Création de la classe portefeuille"""
-    def _init_(self, bourse, nom_portefeuille=None):
+    """Classe portefeuille"""
+    def __init__(self, bourse, nom_portefeuille=None):
+        """Initialisation"""
         self.bourse = bourse
         self.nom_portefeuille = nom_portefeuille
         self.liquidites = 0
@@ -14,7 +19,7 @@ class Portefeuille:
         self.charger_portfolio()
 
     def charger_portfolio(self):
-        """Méthode charger_portfolio"""
+        """Méthode charger portfolio"""
         try:
             with open(f'{self.nom_portefeuille}.json', 'r') as file:
                 data = json.load(file)
@@ -25,29 +30,35 @@ class Portefeuille:
             self.actions = {}
 
     def sauvegarder_portfolio(self):
+        """Méthode sauvegarder portfolio"""
         data = {'liquidites': self.liquidites, 'actions': self.actions}
         with open(f'{self.nom_portefeuille}.json', 'w') as file:
             json.dump(data, file)
 
     def valider_date(self, date):
+        """Méthode pour vérifier la validité des dates"""
         if date > datetime.now().date():
             raise ErreurDate("La date spécifiée est postérieure à la date du jour.")
     
     def enregistrer_transaction(self, type_transaction, montant, date):
+        """Méthode pour enregistrer les transactions"""
         self.transactions.append({'type': type_transaction, 'montant': montant, 'date': date})
 
     def deposer(self, montant, date=None):
+        """Méthode pour augmenter solde"""
         date = date or datetime.now().date()
         self.valider_date(date)
         self.liquidites += montant
         self.enregistrer_transaction('Dépôt', montant, date)
 
     def solde(self, date=None):
+        """Méthode pour indiquer solde"""
         date = date or datetime.now().date()
         self.valider_date(date)
         return self.liquidites
 
     def acheter(self, symbole, quantite, date=None):
+        """Méthode achats"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
@@ -61,6 +72,7 @@ class Portefeuille:
         self.enregistrer_transaction('Achat', prix_achat, date)
 
     def vendre(self, symbole, quantite, date=None):
+        """Méthode vente"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
@@ -73,6 +85,7 @@ class Portefeuille:
         self.enregistrer_transaction('Vente', prix_vente, date)
 
     def valeur_totale(self, date=None):
+        """Méthode pour indiquer valeur totale"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
@@ -82,6 +95,7 @@ class Portefeuille:
         return valeur_liquidites + valeur_titres
 
     def valeur_des_titres(self, symboles, date=None):
+        """Méthode pour indiquer la valeur des titres"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
@@ -89,6 +103,7 @@ class Portefeuille:
                    for symbole, quantite in self.actions.items() if symbole in symboles)
 
     def lister(self, date=None):
+        """Méthode pour afficher le prix"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
@@ -102,6 +117,7 @@ class Portefeuille:
         self.sauvegarder_portfolio()
 
     def titres(self, date=None):
+        """Autre méthode"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
@@ -116,5 +132,63 @@ class Portefeuille:
         
         return valeur_projetee
 
-    
+class PortefeuilleGraphique(Portefeuille):
+    """Classe pour créer un graphe"""
+    def graphique_historique(self, symboles, date_fin=None):
+        """Méthode pour vérifier historique"""
+        date_fin = date_fin or datetime.now().date()
+        self.valider_date(date_fin)
 
+        dates = [date_fin - timedelta(days=x) for x in range(365)]
+        valeurs_titres = {symbole: [] for symbole in symboles}
+
+        for date in reversed(dates):
+            for symbole in symboles:
+                prix_unitaire = self.bourse.prix(symbole, date.strftime('%Y-%m-%d'))
+                quantite = self.actions.get(symbole, 0)
+                montant = quantite * prix_unitaire
+                valeurs_titres[symbole].append(montant)
+
+        plt.figure(figsize=(10, 6))
+        for symbole, valeurs in valeurs_titres.items():
+            plt.plot(dates, valeurs, label=symbole)
+
+        plt.title('Historique des valeurs des actions')
+        plt.xlabel('Date')
+        plt.ylabel('Valeur de l\'action')
+        plt.legend()
+        plt.show()
+
+    def graphique_projection(self, symboles, date_debut=None, date_fin=None, rendement=None, volatilite=None, nombre_projections=1000):
+        """Méthode projection"""
+        date_debut = date_debut or datetime.now().date()
+        date_fin = date_fin or (datetime.now().date() + timedelta(days=365))
+        self.valider_date(date_debut)
+        self.valider_date(date_fin)
+
+        dates = [date_debut + timedelta(days=x) for x in range((date_fin - date_debut).days + 1)]
+
+        projections = []
+
+        for _ in range(nombre_projections):
+            valeurs_titres = []
+            for symbole in symboles:
+                rendement_symbole = rendement.get(symbole, 0) + np.random.normal(0, volatilite.get(symbole, 0) / 100)
+                projections_symbole = [self.bourse.prix(symbole, date.strftime('%Y-%m-%d')) * (1 + rendement_symbole)
+                                        for date in dates]
+                valeurs_titres.extend(projections_symbole)
+
+            projections.append(valeurs_titres)
+
+        projections = np.array(projections)
+        quartiles = np.percentile(projections, [25, 50, 75], axis=0)
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(dates, quartiles[1], label='Médiane')
+        plt.fill_between(dates, quartiles[0], quartiles[2], alpha=0.2, label='Écart interquartile')
+
+        plt.title('Projection des valeurs des actions')
+        plt.xlabel('Date')
+        plt.ylabel('Valeur projetée')
+        plt.legend()
+        plt.show()
