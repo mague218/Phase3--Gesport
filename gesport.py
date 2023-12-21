@@ -65,7 +65,7 @@ def principal():
     elif commande.action == 'lister':
         portefeuille.lister(datetime.now().date())
         if commande.graphique:
-            portefeuille.graphique_listing(date_obj)
+            portefeuille.graphique_historique(date_obj)
     elif commande.action == 'projeter':
         valeur_projetee = portefeuille.valeur_projetee(date_obj, commande.rendement)
         print(f"Valeur projetée = {valeur_projetee}")
