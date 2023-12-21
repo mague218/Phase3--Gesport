@@ -1,4 +1,4 @@
-"""Module Bourse"""
+"""Module bourse"""
 import json
 from datetime import datetime
 from collections import defaultdict
