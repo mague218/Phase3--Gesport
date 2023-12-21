@@ -35,7 +35,6 @@ class Bourse:
             date_recente_precedant = max(dates_anterieures)
             le_return = results["historique"][date_recente_precedant]["fermeture"]
             return le_return
-
         return 0.0
 
     def ajouter_prix(self, symbole, date, prix):
