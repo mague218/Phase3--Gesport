@@ -1,15 +1,16 @@
 """Module Porte Feuilles"""
+import os
 import json
+import io
 from datetime import datetime, timedelta
 from exceptions import ErreurDate, ErreurQuantité, LiquiditéInsuffisante
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 class Portefeuille:
-    """Classe portefeuille"""
+    """Classe portefeuille."""
     def __init__(self, bourse, nom_portefeuille=None):
-        """Initialisation"""
+        """Initialisation du portefeuille."""
         self.bourse = bourse
         self.nom_portefeuille = nom_portefeuille
         self.liquidites = 0
@@ -18,9 +19,9 @@ class Portefeuille:
         self.charger_portfolio()
 
     def charger_portfolio(self):
-        """Méthode charger portfolio"""
+        """Charge les données du portefeuille depuis un fichier."""
         try:
-            with open(f'{self.nom_portefeuille}.json', 'r') as file:
+            with io.open(os.path.join(f'{self.nom_portefeuille}.json'), 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 self.liquidites = data.get('liquidites', 0)
                 self.actions = data.get('actions', {})
@@ -29,9 +30,9 @@ class Portefeuille:
             self.actions = {}
 
     def sauvegarder_portfolio(self):
-        """Méthode sauvegarder portfolio"""
+        """Sauvegarde les données du portefeuille dans un fichier."""
         data = {'liquidites': self.liquidites, 'actions': self.actions}
-        with open(f'{self.nom_portefeuille}.json', 'w') as file:
+        with io.open(os.path.join(f'{self.nom_portefeuille}.json'), 'w', encoding='utf-8') as file:
             json.dump(data, file)
 
     def valider_date(self, date):
