@@ -22,7 +22,6 @@ class Bourse:
 
         results = requests.get(url=url, params=params, timeout=100)
         results = json.loads(results.text)
-        
         if dates in results["historique"]:
             prix_ferm = results["historique"][dates]["fermeture"]
             return prix_ferm

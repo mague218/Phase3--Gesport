@@ -191,3 +191,4 @@ class PortefeuilleGraphique(Portefeuille):
         plt.ylabel('Valeur projetée')
         plt.legend()
         plt.show()
+        
