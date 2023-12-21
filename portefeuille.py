@@ -21,7 +21,9 @@ class Portefeuille:
     def charger_portfolio(self):
         """Charge les données du portefeuille depuis un fichier."""
         try:
-            with io.open(os.path.join(f'{self.nom_portefeuille}.json'), 'r', encoding='utf-8') as file:
+            with io.open(
+                os.path.join(f'{self.nom_portefeuille}.json'), 'r', encoding='utf-8'
+                ) as file:
                 data = json.load(file)
                 self.liquidites = data.get('liquidites', 0)
                 self.actions = data.get('actions', {})
@@ -120,7 +122,7 @@ class Portefeuille:
         date = date or datetime.now().date()
         self.valider_date(date)
 
-        return {symbole: quantite for symbole, quantite in self.actions.items()}
+        return dict(self.actions.items())
 
     def valeur_projetee(self, date, rendement):
         """Définition de la méthode valeur_projetee"""
