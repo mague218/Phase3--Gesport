@@ -158,7 +158,13 @@ class PortefeuilleGraphique(Portefeuille):
         plt.legend()
         plt.show()
 
-    def graphique_projection(self, symboles, date_debut=None, date_fin=None, rendement=None, volatilite=None, nombre_projections=1000):
+    def graphique_projection(self,
+                             symboles,
+                             date_debut=None,
+                             date_fin=None,
+                             rendement=None,
+                             volatilite=None,
+                             nombre_projections=1000):
         """Méthode projection"""
         date_debut = date_debut or datetime.now().date()
         date_fin = date_fin or (datetime.now().date() + timedelta(days=365))
@@ -172,8 +178,11 @@ class PortefeuilleGraphique(Portefeuille):
         for _ in range(nombre_projections):
             valeurs_titres = []
             for symbole in symboles:
-                rendement_symbole = rendement.get(symbole, 0) + np.random.normal(0, volatilite.get(symbole, 0) / 100)
-                projections_symbole = [self.bourse.prix(symbole, date.strftime('%Y-%m-%d')) * (1 + rendement_symbole)
+                rendement_symbole = rendement.get(symbole, 0) + np.random.normal(
+                    0, volatilite.get(symbole, 0) / 100
+                    )
+                projections_symbole = [self.bourse.prix(symbole, date.strftime('%Y-%m-%d')) *
+                                       (1 + rendement_symbole)
                                         for date in dates]
                 valeurs_titres.extend(projections_symbole)
 
@@ -191,4 +200,3 @@ class PortefeuilleGraphique(Portefeuille):
         plt.ylabel('Valeur projetée')
         plt.legend()
         plt.show()
-        
