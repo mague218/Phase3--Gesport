@@ -1,3 +1,4 @@
+"""Module gestion portefeuille"""
 import argparse
 from datetime import datetime
 from bourse import Bourse
@@ -6,6 +7,7 @@ from exceptions import *
 
 
 def analyser_commande():
+    """Initialisation arguments"""
     parser = argparse.ArgumentParser(description="Système de gestion de portefeuille financier")
     parser.add_argument('action',
                         choices=['deposer', 'acheter', 'vendre', 'lister', 'projeter'],
@@ -43,10 +45,10 @@ def analyser_commande():
     return parser.parse_args()
 
 def principal():
+    """Commande principale"""
     commande = analyser_commande()
     bourses = Bourse()
     portefeuille = Portefeuille(bourses, commande.portefeuille)
-    
     if commande.date is None:
         date_obj = datetime.now().date()
     else:
@@ -67,7 +69,6 @@ def principal():
     elif commande.action == 'projeter':
         valeur_projetee = portefeuille.valeur_projetee(date_obj, commande.rendement)
         print(f"Valeur projetée = {valeur_projetee}")
-    
     print(f"Solde = {portefeuille.solde(date_obj)}")
     portefeuille.sauvegarder_portfolio()
 

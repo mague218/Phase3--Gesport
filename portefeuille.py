@@ -1,8 +1,7 @@
 """Module Porte Feuilles"""
+import json
 from datetime import datetime, timedelta
 from exceptions import ErreurDate, ErreurQuantité, LiquiditéInsuffisante
-from bourse import Bourse
-import json
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -39,7 +38,6 @@ class Portefeuille:
         """Méthode pour vérifier la validité des dates"""
         if date > datetime.now().date():
             raise ErreurDate("La date spécifiée est postérieure à la date du jour.")
-    
     def enregistrer_transaction(self, type_transaction, montant, date):
         """Méthode pour enregistrer les transactions"""
         self.transactions.append({'type': type_transaction, 'montant': montant, 'date': date})
@@ -129,7 +127,6 @@ class Portefeuille:
             raise ErreurDate("La date future spécifiée est antérieure ou égale à la date du jour.")
 
         valeur_projetee = self.liquidites + sum(quantite * self.bourse.prix(symbole, date.strftime('%Y-%m-%d')) *(1 + rendement.get(symbole, 0) / 100)for symbole, quantite in self.actions.items())
-        
         return valeur_projetee
 
 class PortefeuilleGraphique(Portefeuille):
