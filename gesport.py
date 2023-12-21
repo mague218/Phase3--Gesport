@@ -3,7 +3,6 @@ import argparse
 from datetime import datetime
 from bourse import Bourse
 from portefeuille import Portefeuille
-from exceptions import *
 
 
 def analyser_commande():
@@ -33,7 +32,8 @@ def analyser_commande():
                         '--volatilite',
                         type=float,
                         default=0,
-                        help='Indice de volatilité global sur le rendement annuel (par défaut : 0)')
+                        help='Indice de volatilité global sur le rendement annuel (par défaut : 0)'
+                        )
     parser.add_argument('-g',
                         '--graphique',
                         action='store_true',
@@ -52,7 +52,7 @@ def principal():
     if commande.date is None:
         date_obj = datetime.now().date()
     else:
-        datetime.strptime(commande.date, '%Y-%m-%d').date()
+        date_obj = datetime.strptime(commande.date, '%Y-%m-%d').date()
     if commande.action == 'deposer':
         portefeuille.charger_portfolio()
         portefeuille.deposer(int(commande.quantite), date_obj)

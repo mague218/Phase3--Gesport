@@ -126,7 +126,9 @@ class Portefeuille:
         if date <= datetime.now().date():
             raise ErreurDate("La date future spécifiée est antérieure ou égale à la date du jour.")
 
-        valeur_projetee = self.liquidites + sum(quantite * self.bourse.prix(symbole, date.strftime('%Y-%m-%d')) *(1 + rendement.get(symbole, 0) / 100)for symbole, quantite in self.actions.items())
+        valeur_projetee = self.liquidites + sum(
+            quantite * self.bourse.prix(symbole, date.strftime('%Y-%m-%d')) *
+            (1 + rendement.get(symbole, 0) / 100)for symbole, quantite in self.actions.items())
         return valeur_projetee
 
 class PortefeuilleGraphique(Portefeuille):
