@@ -2,7 +2,7 @@
 import argparse
 from datetime import datetime
 from bourse import Bourse
-from portefeuille import Portefeuille
+from portefeuille import PortefeuilleGraphique
 
 
 def analyser_commande():
@@ -48,7 +48,7 @@ def principal():
     """Commande principale"""
     commande = analyser_commande()
     bourses = Bourse()
-    portefeuille = Portefeuille(bourses, commande.portefeuille)
+    portefeuille = PortefeuilleGraphique(bourses, commande.portefeuille)
     if commande.date is None:
         date_obj = datetime.now().date()
     else:
@@ -65,7 +65,7 @@ def principal():
     elif commande.action == 'lister':
         portefeuille.lister(datetime.now().date())
         if commande.graphique:
-            portefeuille.graphique_historique(date_obj)
+            portefeuille.graphique_historique(commande.titres)
     elif commande.action == 'projeter':
         valeur_projetee = portefeuille.valeur_projetee(date_obj, commande.rendement)
         print(f"Valeur projetée = {valeur_projetee}")

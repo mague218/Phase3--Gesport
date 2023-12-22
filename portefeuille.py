@@ -104,7 +104,7 @@ class Portefeuille:
                    for symbole, quantite in self.actions.items() if symbole in symboles)
 
     def lister(self, date=None):
-        """Méthode pour afficher le prix"""
+        """Autre méthode"""
         date = date or datetime.now().date()
         self.valider_date(date)
 
