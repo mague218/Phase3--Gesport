@@ -1,4 +1,4 @@
-"""Module gestion portefeuille"""
+"""Module Gestion portefeuille"""
 import argparse
 from datetime import datetime
 from bourse import Bourse
